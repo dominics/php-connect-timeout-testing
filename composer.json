@@ -1,0 +1,12 @@
+{
+    "name": "dominic/php-connect-timeout-testing",
+    "authors": [
+        {
+            "name": "Dominic Scheirlinck",
+            "email": "dominic@varspool.com"
+        }
+    ],
+    "require": {
+        "guzzlehttp/guzzle": "6.x"
+    }
+}
