@@ -1,0 +1,17 @@
+#!/bin/bash -e
+
+cd "$(dirname "$0")"
+source scripts/_common
+
+checkBinary docker
+checkBinary docker-compose
+checkComposer
+
+clean
+buildDir
+
+buildGuzzle
+buildEnvironments
+buildDnsInstances
+
+docker-compose up

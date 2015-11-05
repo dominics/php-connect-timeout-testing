@@ -1,0 +1,66 @@
+#!/bin/bash
+
+function clean() {
+    rm -rf build/env
+}
+
+function checkComposer() {
+    hash composer
+    if [ $? -eq 0 ]; then
+        COMPOSER=composer
+    else
+        if [ ! -f build/composer.phar ]; then
+            curl -sS https://getcomposer.org/installer | php -- --install-dir=build
+        fi
+        COMPOSER=build/composer.phar
+    fi
+}
+
+function checkBinary() {
+    hash $1
+    if [ $? -ne 0 ]; then
+        echo "$1 is not available on the PATH" >&2
+        exit 1
+    fi
+}
+
+function buildDir() {
+    mkdir -p build/env
+}
+
+function buildGuzzle() {
+    cd tests/guzzle
+    $COMPOSER install
+    cd -
+}
+
+function buildEnvironments() {
+    for type in good bad; do
+        for env in `ls env/test`; do
+            DEST="build/env/${type}-${env}"
+            echo "Creating environment at ${DEST}"
+            mkdir -p ${DEST}
+            cp -r tests ${DEST}
+            cp -r "env/test/${env}/"* ${DEST}
+        done
+    done
+}
+
+function buildDnsInstances() {
+    docker-compose up -d bad-dns
+    docker-compose up -d good-dns
+
+    BAD_ID=`docker-compose ps -q bad-dns`
+    export BAD_DNS_IP=`docker inspect -f '{{.NetworkSettings.IPAddress}}' ${BAD_ID}`
+
+    GOOD_ID=`docker-compose ps -q good-dns`
+    export GOOD_DNS_IP=`docker inspect -f '{{.NetworkSettings.IPAddress}}' ${GOOD_ID}`
+
+    if [[ -z $GOOD_DNS_IP || -z $BAD_DNS_IP ]]; then
+        echo "Good and bad DNS server failed to start?" >&2
+        exit 1
+    fi
+
+    echo "Bad DNS server is ${BAD_DNS_IP} (\`dig @${BAD_DNS_IP} example.com\` will fail)" >&2
+    echo "Good DNS server is ${GOOD_DNS_IP} (\`dig @${GOOD_DNS_IP} example.com\` will succeed)" >&2
+}
