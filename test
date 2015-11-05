@@ -11,7 +11,29 @@ clean
 buildDir
 
 buildGuzzle
-buildEnvironments
 buildDnsInstances
+buildEnvironments
+buildOtherServices
 
-docker-compose up
+set +e
+
+for env in `ls build/env`; do
+    for test in `ls tests`; do
+        outFile=build/out/${env}-${test}.out
+        echo "Running test: ${test} on ${env} (> ${outFile})" >&2
+
+        (
+            command="cd /usr/src/tests/${test}; chmod +x run.sh; sync; ./run.sh"
+            docker-compose run --rm "${env}" \
+                '/bin/bash' -c "${command}" > ${outFile} 2>&1
+        ) &
+
+        sync
+        sleep 1
+    done
+done
+
+echo "Waiting for tests to complete..." >&2
+wait
+
+echo "All done" >&2

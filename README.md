@@ -42,3 +42,7 @@ real	0m20.122s [!!!!!!!!!!!!]
 user	0m0.836s
 sys	0m0.065s
 ```
+
+## Docker
+
+The setup uses docker-compose and requires 1.5.0 or higher.

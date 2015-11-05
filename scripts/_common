@@ -1,7 +1,9 @@
 #!/bin/bash
 
 function clean() {
-    rm -rf build/env
+    rm -rf build/env build/out docker-compose.override.yml
+    docker-compose kill
+    docker-compose rm -f
 }
 
 function checkComposer() {
@@ -10,7 +12,7 @@ function checkComposer() {
         COMPOSER=composer
     else
         if [ ! -f build/composer.phar ]; then
-            curl -sS https://getcomposer.org/installer | php -- --install-dir=build
+            curl -sS https://getcomposer.org/installer | php -- --install-dir=build >&2
         fi
         COMPOSER=build/composer.phar
     fi
@@ -25,7 +27,7 @@ function checkBinary() {
 }
 
 function buildDir() {
-    mkdir -p build/env
+    mkdir -p build/env build/out
 }
 
 function buildGuzzle() {
@@ -37,11 +39,23 @@ function buildGuzzle() {
 function buildEnvironments() {
     for type in good bad; do
         for env in `ls env/test`; do
-            DEST="build/env/${type}-${env}"
-            echo "Creating environment at ${DEST}"
-            mkdir -p ${DEST}
-            cp -r tests ${DEST}
-            cp -r "env/test/${env}/"* ${DEST}
+            build="${type}-${env}"
+            dest="build/env/${build}"
+
+            if [[ "${type}" == 'good' ]]; then
+                use="GOOD_DNS_IP"
+            else
+                use="BAD_DNS_IP"
+            fi
+
+            echo "Creating environment at ${dest}" >&2
+            mkdir -p ${dest}
+            cp -r tests ${dest}
+            cp -r "env/test/${env}/"* ${dest}
+
+            echo "Adding to docker-compose.override.yml" >&2
+            definition="\n# --- Generated entry: ${build}\n${build}:\n  build: ${dest}\n  dns:\n    - \"\${${use}}\"\n\n"
+            echo -e "${definition}" >> docker-compose.override.yml
         done
     done
 }
@@ -50,11 +64,11 @@ function buildDnsInstances() {
     docker-compose up -d bad-dns
     docker-compose up -d good-dns
 
-    BAD_ID=`docker-compose ps -q bad-dns`
-    export BAD_DNS_IP=`docker inspect -f '{{.NetworkSettings.IPAddress}}' ${BAD_ID}`
+    bad_id=`docker-compose ps -q bad-dns`
+    export BAD_DNS_IP=`docker inspect -f '{{.NetworkSettings.IPAddress}}' ${bad_id}`
 
-    GOOD_ID=`docker-compose ps -q good-dns`
-    export GOOD_DNS_IP=`docker inspect -f '{{.NetworkSettings.IPAddress}}' ${GOOD_ID}`
+    good_id=`docker-compose ps -q good-dns`
+    export GOOD_DNS_IP=`docker inspect -f '{{.NetworkSettings.IPAddress}}' ${good_id}`
 
     if [[ -z $GOOD_DNS_IP || -z $BAD_DNS_IP ]]; then
         echo "Good and bad DNS server failed to start?" >&2
@@ -63,4 +77,8 @@ function buildDnsInstances() {
 
     echo "Bad DNS server is ${BAD_DNS_IP} (\`dig @${BAD_DNS_IP} example.com\` will fail)" >&2
     echo "Good DNS server is ${GOOD_DNS_IP} (\`dig @${GOOD_DNS_IP} example.com\` will succeed)" >&2
+}
+
+function buildOtherServices() {
+    docker-compose build
 }

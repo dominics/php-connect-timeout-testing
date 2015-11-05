@@ -5,16 +5,8 @@ bad-dns:
 
 good-dns:
   build: env/good-dns
+  expose:
+    - 53
   dns:
     - 8.8.8.8
     - 8.8.4.4
-
-good-php-ubuntu-trusty:
-  build: build/env/good-php-ubuntu-trusty
-  dns:
-    - "${GOOD_DNS_IP}"
-
-bad-php-ubuntu-trusty:
-  build: build/env/bad-php-ubuntu-trusty
-  dns:
-    - "${BAD_DNS_IP}"
