@@ -1,4 +1,5 @@
 #!/bin/bash
 
 /usr/bin/env php -v
-time /usr/bin/env php /usr/src/tests/guzzle/run.php
+php -i | grep -A 25 ^curl
+time /usr/bin/env php -d error_reporting=-1 /usr/src/tests/guzzle/run.php

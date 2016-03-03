@@ -60,3 +60,8 @@ To test the handling of connection timeouts caused by DNS timing out yourself, y
 * Run a listener on UDP port 53
     * Don't use `nc`/netcat for this, because of http://stackoverflow.com/questions/7696862/strange-behavoiur-of-netcat-with-udp#answer-7696956
     * Socat works, and is what we use in the docker environments for this repo: `sudo socat UDP-RECV:53 STDOUT`
+
+# Examples
+
+* Here's an example of [a run](example.test.out)
+* And, more importantly, [the summarized output](example.summarize.out)

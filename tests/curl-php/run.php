@@ -1,7 +1,11 @@
 #!/usr/bin/env php
 <?php
 
-$ch = curl_init('http://some.nonexistent.hostname.example/');
+if (empty($_SERVER['TEST_HOSTNAME'])) {
+    throw new Exception('Test hostname not found');
+}
+
+$ch = curl_init(sprintf('http://%s/', $_SERVER['TEST_HOSTNAME']));
 
 curl_setopt($ch, CURLOPT_TIMEOUT, 5000);
 curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 3000);

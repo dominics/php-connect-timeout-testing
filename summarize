@@ -15,5 +15,6 @@ tests=$(find build/out -type f -name \*.out | sort)
 for test in $tests; do
     echo -n $(basename $test) | sed 's/_/\t/g' | sed 's/\.out$//'
     echo -ne \\t
-    cat $test | sed -n '/^real\t.*$/p' | cut -f 2
+    cat $test | sed -n '/^real\t.*$/p' | cut -f 2 | tr -d '\n'
+    echo # We like to echo the last newline explicitly, to keep records separate
 done

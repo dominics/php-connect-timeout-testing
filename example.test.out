@@ -1,0 +1,310 @@
+/bin/bash -e ~/php-connect-timeout-testing/test
+Loading composer repositories with package information
+Installing dependencies (including require-dev) from lock file
+Nothing to install or update
+Generating autoload files
+~/php-connect-timeout-testing
+Creating phpconnecttimeouttesting_bad-dns_1
+Creating phpconnecttimeouttesting_good-dns_1
+Bad DNS server is 172.17.0.2 (`dig @172.17.0.2 example.com` will fail)
+Good DNS server is 172.17.0.3 (`dig @172.17.0.3 example.com` will succeed)
+Creating environment at build/env/good-hostname_good-dns_trusty-php5.5
+Adding to docker-compose.override.yml
+Creating environment at build/env/good-hostname_good-dns_trusty-php5.6
+Adding to docker-compose.override.yml
+Creating environment at build/env/good-hostname_good-dns_trusty-php7.0
+Adding to docker-compose.override.yml
+Creating environment at build/env/good-hostname_bad-dns_trusty-php5.5
+Adding to docker-compose.override.yml
+Creating environment at build/env/good-hostname_bad-dns_trusty-php5.6
+Adding to docker-compose.override.yml
+Creating environment at build/env/good-hostname_bad-dns_trusty-php7.0
+Adding to docker-compose.override.yml
+Creating environment at build/env/bad-hostname_good-dns_trusty-php5.5
+Adding to docker-compose.override.yml
+Creating environment at build/env/bad-hostname_good-dns_trusty-php5.6
+Adding to docker-compose.override.yml
+Creating environment at build/env/bad-hostname_good-dns_trusty-php7.0
+Adding to docker-compose.override.yml
+Creating environment at build/env/bad-hostname_bad-dns_trusty-php5.5
+Adding to docker-compose.override.yml
+Creating environment at build/env/bad-hostname_bad-dns_trusty-php5.6
+Adding to docker-compose.override.yml
+Creating environment at build/env/bad-hostname_bad-dns_trusty-php7.0
+Adding to docker-compose.override.yml
+Building bad-hostname_bad-dns_trusty-php7.0
+Step 1 : FROM phusion/baseimage:0.9.17
+ ---> ea7f812691cd
+Step 2 : CMD /sbin/my_init
+ ---> Using cache
+ ---> 5aac681ff99b
+Step 3 : RUN apt-get install -y language-pack-en-base && LC_ALL=en_US.UTF-8 apt-add-repository ppa:ondrej/php && apt-key adv --keyserver keyserver.ubuntu.com --recv-keys E5267A6C && apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y php7.0 php7.0-curl
+ ---> Using cache
+ ---> 917656b8b6ca
+Step 4 : RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+ ---> Using cache
+ ---> 38ef38ae2c80
+Step 5 : COPY tests /usr/src/tests
+ ---> Using cache
+ ---> 3adc069b00bc
+Successfully built 3adc069b00bc
+Building good-dns
+Step 1 : FROM phusion/baseimage:0.9.17
+ ---> ea7f812691cd
+Step 2 : CMD /sbin/my_init
+ ---> Using cache
+ ---> 5aac681ff99b
+Step 3 : RUN apt-get update && apt-get install -y   dnsmasq
+ ---> Using cache
+ ---> 55ac6809e7b1
+Step 4 : RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+ ---> Using cache
+ ---> 4b60d3801094
+Step 5 : EXPOSE 53
+ ---> Using cache
+ ---> ca8058ab4567
+Step 6 : RUN mkdir /etc/service/dnsmasq
+ ---> Using cache
+ ---> 3394cba40d9b
+Step 7 : ADD dnsmasq.sh /etc/service/dnsmasq/run
+ ---> Using cache
+ ---> dad3633e25c6
+Successfully built dad3633e25c6
+Building bad-hostname_good-dns_trusty-php7.0
+Step 1 : FROM phusion/baseimage:0.9.17
+ ---> ea7f812691cd
+Step 2 : CMD /sbin/my_init
+ ---> Using cache
+ ---> 5aac681ff99b
+Step 3 : RUN apt-get install -y language-pack-en-base && LC_ALL=en_US.UTF-8 apt-add-repository ppa:ondrej/php && apt-key adv --keyserver keyserver.ubuntu.com --recv-keys E5267A6C && apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y php7.0 php7.0-curl
+ ---> Using cache
+ ---> 917656b8b6ca
+Step 4 : RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+ ---> Using cache
+ ---> 38ef38ae2c80
+Step 5 : COPY tests /usr/src/tests
+ ---> Using cache
+ ---> 3adc069b00bc
+Successfully built 3adc069b00bc
+Building good-hostname_good-dns_trusty-php7.0
+Step 1 : FROM phusion/baseimage:0.9.17
+ ---> ea7f812691cd
+Step 2 : CMD /sbin/my_init
+ ---> Using cache
+ ---> 5aac681ff99b
+Step 3 : RUN apt-get install -y language-pack-en-base && LC_ALL=en_US.UTF-8 apt-add-repository ppa:ondrej/php && apt-key adv --keyserver keyserver.ubuntu.com --recv-keys E5267A6C && apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y php7.0 php7.0-curl
+ ---> Using cache
+ ---> 917656b8b6ca
+Step 4 : RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+ ---> Using cache
+ ---> 38ef38ae2c80
+Step 5 : COPY tests /usr/src/tests
+ ---> Using cache
+ ---> 3adc069b00bc
+Successfully built 3adc069b00bc
+Building bad-dns
+Step 1 : FROM phusion/baseimage:0.9.17
+ ---> ea7f812691cd
+Step 2 : CMD /sbin/my_init
+ ---> Using cache
+ ---> 5aac681ff99b
+Step 3 : RUN apt-get update && apt-get install -y   socat
+ ---> Using cache
+ ---> e8cd4842234d
+Step 4 : RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+ ---> Using cache
+ ---> d91f31d265d2
+Step 5 : EXPOSE 53
+ ---> Using cache
+ ---> 4dac63995788
+Step 6 : RUN mkdir /etc/service/socat
+ ---> Using cache
+ ---> a3a54e07573c
+Step 7 : ADD socat.sh /etc/service/socat/run
+ ---> Using cache
+ ---> 666957d22f28
+Successfully built 666957d22f28
+Building good-hostname_bad-dns_trusty-php7.0
+Step 1 : FROM phusion/baseimage:0.9.17
+ ---> ea7f812691cd
+Step 2 : CMD /sbin/my_init
+ ---> Using cache
+ ---> 5aac681ff99b
+Step 3 : RUN apt-get install -y language-pack-en-base && LC_ALL=en_US.UTF-8 apt-add-repository ppa:ondrej/php && apt-key adv --keyserver keyserver.ubuntu.com --recv-keys E5267A6C && apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y php7.0 php7.0-curl
+ ---> Using cache
+ ---> 917656b8b6ca
+Step 4 : RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+ ---> Using cache
+ ---> 38ef38ae2c80
+Step 5 : COPY tests /usr/src/tests
+ ---> Using cache
+ ---> 3adc069b00bc
+Successfully built 3adc069b00bc
+Building good-hostname_good-dns_trusty-php5.5
+Step 1 : FROM phusion/baseimage:0.9.17
+ ---> ea7f812691cd
+Step 2 : CMD /sbin/my_init
+ ---> Using cache
+ ---> 5aac681ff99b
+Step 3 : RUN apt-get install -y language-pack-en-base && LC_ALL=en_US.UTF-8 apt-add-repository ppa:ondrej/php5 && apt-key adv --keyserver keyserver.ubuntu.com --recv-keys E5267A6C && apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y php5-cli php5-curl
+ ---> Using cache
+ ---> 3972fb063776
+Step 4 : RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+ ---> Using cache
+ ---> 31cf278cd8a3
+Step 5 : COPY tests /usr/src/tests
+ ---> Using cache
+ ---> b375a6adecee
+Successfully built b375a6adecee
+Building bad-hostname_good-dns_trusty-php5.5
+Step 1 : FROM phusion/baseimage:0.9.17
+ ---> ea7f812691cd
+Step 2 : CMD /sbin/my_init
+ ---> Using cache
+ ---> 5aac681ff99b
+Step 3 : RUN apt-get install -y language-pack-en-base && LC_ALL=en_US.UTF-8 apt-add-repository ppa:ondrej/php5 && apt-key adv --keyserver keyserver.ubuntu.com --recv-keys E5267A6C && apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y php5-cli php5-curl
+ ---> Using cache
+ ---> 3972fb063776
+Step 4 : RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+ ---> Using cache
+ ---> 31cf278cd8a3
+Step 5 : COPY tests /usr/src/tests
+ ---> Using cache
+ ---> b375a6adecee
+Successfully built b375a6adecee
+Building bad-hostname_good-dns_trusty-php5.6
+Step 1 : FROM phusion/baseimage:0.9.17
+ ---> ea7f812691cd
+Step 2 : CMD /sbin/my_init
+ ---> Using cache
+ ---> 5aac681ff99b
+Step 3 : RUN apt-get install -y language-pack-en-base && LC_ALL=en_US.UTF-8 apt-add-repository ppa:ondrej/php && apt-key adv --keyserver keyserver.ubuntu.com --recv-keys E5267A6C && apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y php5.6 php5.6-curl
+ ---> Using cache
+ ---> 82f8a83ffd31
+Step 4 : RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+ ---> Using cache
+ ---> 610141576efb
+Step 5 : COPY tests /usr/src/tests
+ ---> Using cache
+ ---> c142736e6d66
+Successfully built c142736e6d66
+Building good-hostname_good-dns_trusty-php5.6
+Step 1 : FROM phusion/baseimage:0.9.17
+ ---> ea7f812691cd
+Step 2 : CMD /sbin/my_init
+ ---> Using cache
+ ---> 5aac681ff99b
+Step 3 : RUN apt-get install -y language-pack-en-base && LC_ALL=en_US.UTF-8 apt-add-repository ppa:ondrej/php && apt-key adv --keyserver keyserver.ubuntu.com --recv-keys E5267A6C && apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y php5.6 php5.6-curl
+ ---> Using cache
+ ---> 82f8a83ffd31
+Step 4 : RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+ ---> Using cache
+ ---> 610141576efb
+Step 5 : COPY tests /usr/src/tests
+ ---> Using cache
+ ---> c142736e6d66
+Successfully built c142736e6d66
+Building bad-hostname_bad-dns_trusty-php5.6
+Step 1 : FROM phusion/baseimage:0.9.17
+ ---> ea7f812691cd
+Step 2 : CMD /sbin/my_init
+ ---> Using cache
+ ---> 5aac681ff99b
+Step 3 : RUN apt-get install -y language-pack-en-base && LC_ALL=en_US.UTF-8 apt-add-repository ppa:ondrej/php && apt-key adv --keyserver keyserver.ubuntu.com --recv-keys E5267A6C && apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y php5.6 php5.6-curl
+ ---> Using cache
+ ---> 82f8a83ffd31
+Step 4 : RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+ ---> Using cache
+ ---> 610141576efb
+Step 5 : COPY tests /usr/src/tests
+ ---> Using cache
+ ---> c142736e6d66
+Successfully built c142736e6d66
+Building bad-hostname_bad-dns_trusty-php5.5
+Step 1 : FROM phusion/baseimage:0.9.17
+ ---> ea7f812691cd
+Step 2 : CMD /sbin/my_init
+ ---> Using cache
+ ---> 5aac681ff99b
+Step 3 : RUN apt-get install -y language-pack-en-base && LC_ALL=en_US.UTF-8 apt-add-repository ppa:ondrej/php5 && apt-key adv --keyserver keyserver.ubuntu.com --recv-keys E5267A6C && apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y php5-cli php5-curl
+ ---> Using cache
+ ---> 3972fb063776
+Step 4 : RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+ ---> Using cache
+ ---> 31cf278cd8a3
+Step 5 : COPY tests /usr/src/tests
+ ---> Using cache
+ ---> b375a6adecee
+Successfully built b375a6adecee
+Building good-hostname_bad-dns_trusty-php5.5
+Step 1 : FROM phusion/baseimage:0.9.17
+ ---> ea7f812691cd
+Step 2 : CMD /sbin/my_init
+ ---> Using cache
+ ---> 5aac681ff99b
+Step 3 : RUN apt-get install -y language-pack-en-base && LC_ALL=en_US.UTF-8 apt-add-repository ppa:ondrej/php5 && apt-key adv --keyserver keyserver.ubuntu.com --recv-keys E5267A6C && apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y php5-cli php5-curl
+ ---> Using cache
+ ---> 3972fb063776
+Step 4 : RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+ ---> Using cache
+ ---> 31cf278cd8a3
+Step 5 : COPY tests /usr/src/tests
+ ---> Using cache
+ ---> b375a6adecee
+Successfully built b375a6adecee
+Building good-hostname_bad-dns_trusty-php5.6
+Step 1 : FROM phusion/baseimage:0.9.17
+ ---> ea7f812691cd
+Step 2 : CMD /sbin/my_init
+ ---> Using cache
+ ---> 5aac681ff99b
+Step 3 : RUN apt-get install -y language-pack-en-base && LC_ALL=en_US.UTF-8 apt-add-repository ppa:ondrej/php && apt-key adv --keyserver keyserver.ubuntu.com --recv-keys E5267A6C && apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y php5.6 php5.6-curl
+ ---> Using cache
+ ---> 82f8a83ffd31
+Step 4 : RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+ ---> Using cache
+ ---> 610141576efb
+Step 5 : COPY tests /usr/src/tests
+ ---> Using cache
+ ---> c142736e6d66
+Successfully built c142736e6d66
+Running test: curl-php on bad-hostname_bad-dns_trusty-php5.5 (> build/out/bad-hostname_bad-dns_trusty-php5.5_curl-php.out)
+Running test: curl-sh on bad-hostname_bad-dns_trusty-php5.5 (> build/out/bad-hostname_bad-dns_trusty-php5.5_curl-sh.out)
+Running test: guzzle on bad-hostname_bad-dns_trusty-php5.5 (> build/out/bad-hostname_bad-dns_trusty-php5.5_guzzle.out)
+Running test: curl-php on bad-hostname_bad-dns_trusty-php5.6 (> build/out/bad-hostname_bad-dns_trusty-php5.6_curl-php.out)
+Running test: curl-sh on bad-hostname_bad-dns_trusty-php5.6 (> build/out/bad-hostname_bad-dns_trusty-php5.6_curl-sh.out)
+Running test: guzzle on bad-hostname_bad-dns_trusty-php5.6 (> build/out/bad-hostname_bad-dns_trusty-php5.6_guzzle.out)
+Running test: curl-php on bad-hostname_bad-dns_trusty-php7.0 (> build/out/bad-hostname_bad-dns_trusty-php7.0_curl-php.out)
+Running test: curl-sh on bad-hostname_bad-dns_trusty-php7.0 (> build/out/bad-hostname_bad-dns_trusty-php7.0_curl-sh.out)
+Running test: guzzle on bad-hostname_bad-dns_trusty-php7.0 (> build/out/bad-hostname_bad-dns_trusty-php7.0_guzzle.out)
+Running test: curl-php on bad-hostname_good-dns_trusty-php5.5 (> build/out/bad-hostname_good-dns_trusty-php5.5_curl-php.out)
+Running test: curl-sh on bad-hostname_good-dns_trusty-php5.5 (> build/out/bad-hostname_good-dns_trusty-php5.5_curl-sh.out)
+Running test: guzzle on bad-hostname_good-dns_trusty-php5.5 (> build/out/bad-hostname_good-dns_trusty-php5.5_guzzle.out)
+Running test: curl-php on bad-hostname_good-dns_trusty-php5.6 (> build/out/bad-hostname_good-dns_trusty-php5.6_curl-php.out)
+Running test: curl-sh on bad-hostname_good-dns_trusty-php5.6 (> build/out/bad-hostname_good-dns_trusty-php5.6_curl-sh.out)
+Running test: guzzle on bad-hostname_good-dns_trusty-php5.6 (> build/out/bad-hostname_good-dns_trusty-php5.6_guzzle.out)
+Running test: curl-php on bad-hostname_good-dns_trusty-php7.0 (> build/out/bad-hostname_good-dns_trusty-php7.0_curl-php.out)
+Running test: curl-sh on bad-hostname_good-dns_trusty-php7.0 (> build/out/bad-hostname_good-dns_trusty-php7.0_curl-sh.out)
+Running test: guzzle on bad-hostname_good-dns_trusty-php7.0 (> build/out/bad-hostname_good-dns_trusty-php7.0_guzzle.out)
+Running test: curl-php on good-hostname_bad-dns_trusty-php5.5 (> build/out/good-hostname_bad-dns_trusty-php5.5_curl-php.out)
+Running test: curl-sh on good-hostname_bad-dns_trusty-php5.5 (> build/out/good-hostname_bad-dns_trusty-php5.5_curl-sh.out)
+Running test: guzzle on good-hostname_bad-dns_trusty-php5.5 (> build/out/good-hostname_bad-dns_trusty-php5.5_guzzle.out)
+Running test: curl-php on good-hostname_bad-dns_trusty-php5.6 (> build/out/good-hostname_bad-dns_trusty-php5.6_curl-php.out)
+Running test: curl-sh on good-hostname_bad-dns_trusty-php5.6 (> build/out/good-hostname_bad-dns_trusty-php5.6_curl-sh.out)
+Running test: guzzle on good-hostname_bad-dns_trusty-php5.6 (> build/out/good-hostname_bad-dns_trusty-php5.6_guzzle.out)
+Running test: curl-php on good-hostname_bad-dns_trusty-php7.0 (> build/out/good-hostname_bad-dns_trusty-php7.0_curl-php.out)
+Running test: curl-sh on good-hostname_bad-dns_trusty-php7.0 (> build/out/good-hostname_bad-dns_trusty-php7.0_curl-sh.out)
+Running test: guzzle on good-hostname_bad-dns_trusty-php7.0 (> build/out/good-hostname_bad-dns_trusty-php7.0_guzzle.out)
+Running test: curl-php on good-hostname_good-dns_trusty-php5.5 (> build/out/good-hostname_good-dns_trusty-php5.5_curl-php.out)
+Running test: curl-sh on good-hostname_good-dns_trusty-php5.5 (> build/out/good-hostname_good-dns_trusty-php5.5_curl-sh.out)
+Running test: guzzle on good-hostname_good-dns_trusty-php5.5 (> build/out/good-hostname_good-dns_trusty-php5.5_guzzle.out)
+Running test: curl-php on good-hostname_good-dns_trusty-php5.6 (> build/out/good-hostname_good-dns_trusty-php5.6_curl-php.out)
+Running test: curl-sh on good-hostname_good-dns_trusty-php5.6 (> build/out/good-hostname_good-dns_trusty-php5.6_curl-sh.out)
+Running test: guzzle on good-hostname_good-dns_trusty-php5.6 (> build/out/good-hostname_good-dns_trusty-php5.6_guzzle.out)
+Running test: curl-php on good-hostname_good-dns_trusty-php7.0 (> build/out/good-hostname_good-dns_trusty-php7.0_curl-php.out)
+Running test: curl-sh on good-hostname_good-dns_trusty-php7.0 (> build/out/good-hostname_good-dns_trusty-php7.0_curl-sh.out)
+Running test: guzzle on good-hostname_good-dns_trusty-php7.0 (> build/out/good-hostname_good-dns_trusty-php7.0_guzzle.out)
+Waiting for tests to complete...
+All done
+
+Process finished with exit code 0

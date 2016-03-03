@@ -39,9 +39,9 @@ function buildGuzzle() {
 function buildEnvironments() {
     for hostname_type in good-hostname bad-hostname; do
         if [[ "${hostname_type}" == 'good-hostname' ]]; then
-            hostname_use="GOOD_HOSTNAME_IP"
+            hostname="example.com"
         else
-            hostname_use="BAD_HOSTNAME_IP"
+            hostname="some.name.that.does.not.resolve.example"
         fi
 
         for dns_type in good-dns bad-dns; do
@@ -55,16 +55,24 @@ function buildEnvironments() {
                 build="${hostname_type}_${dns_type}_${env}"
                 dest="build/env/${build}"
 
-
-
                 echo "Creating environment at ${dest}" >&2
                 mkdir -p ${dest}
                 cp -r tests ${dest}
                 cp -r "env/test/${env}/"* ${dest}
 
                 echo "Adding to docker-compose.override.yml" >&2
-                definition="\n# --- Generated entry: ${build}\n${build}:\n  build: ${dest}\n  dns:\n    - \"\${${dns_use}}\"\n\n"
-                echo -e "${definition}" >> docker-compose.override.yml
+
+                definition=$(cat <<TEMPLATE
+# -- Generated entry: ${build}
+${build}:
+  build: ${dest}
+  environment:
+    TEST_HOSTNAME: ${hostname}
+  dns:
+    - "\${${dns_use}}"
+TEMPLATE
+)
+                echo "${definition}" >> docker-compose.override.yml
             done
         done
     done
