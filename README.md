@@ -37,7 +37,8 @@ So, that's 2 x 2 x 3 = 12 environments for each test. So far... :)
 
 * `curl-sh` is a test using the command line cURL distributed with Ubuntu Trusty
 * `curl-php` is a test using PHP's cURL extension (in simple `curl_exec` mode)
-* `guzzle` is a test using Guzzle 6 with its default (multi-cURL) handler
+* `curl-guzzle` is a test using Guzzle 6 with its default (multi-cURL) handler
+* `stream-guzzle` is a test using Guzzle 6 with its PHP streams handler
 
 ### Criteria
 

@@ -1,3 +1,4 @@
-tests/guzzle/vendor
+tests/curl-guzzle/vendor
+tests/stream-guzzle/vendor
 build
 docker-compose.override.yml

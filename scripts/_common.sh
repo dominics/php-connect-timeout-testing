@@ -31,9 +31,11 @@ function buildDir() {
 }
 
 function buildGuzzle() {
-    cd tests/guzzle
-    $COMPOSER install
-    cd -
+    for test in curl-guzzle stream-guzzle; do
+        cd tests/${test}
+        $COMPOSER install
+        cd -
+    done
 }
 
 function buildEnvironments() {
