@@ -37,25 +37,35 @@ function buildGuzzle() {
 }
 
 function buildEnvironments() {
-    for type in good bad; do
-        for env in `ls env/test`; do
-            build="${type}-${env}"
-            dest="build/env/${build}"
+    for hostname_type in good-hostname bad-hostname; do
+        if [[ "${hostname_type}" == 'good-hostname' ]]; then
+            hostname_use="GOOD_HOSTNAME_IP"
+        else
+            hostname_use="BAD_HOSTNAME_IP"
+        fi
 
-            if [[ "${type}" == 'good' ]]; then
-                use="GOOD_DNS_IP"
+        for dns_type in good-dns bad-dns; do
+            if [[ "${dns_type}" == 'good-dns' ]]; then
+                dns_use="GOOD_DNS_IP"
             else
-                use="BAD_DNS_IP"
+                dns_use="BAD_DNS_IP"
             fi
 
-            echo "Creating environment at ${dest}" >&2
-            mkdir -p ${dest}
-            cp -r tests ${dest}
-            cp -r "env/test/${env}/"* ${dest}
+            for env in `ls env/test`; do
+                build="${hostname_type}_${dns_type}_${env}"
+                dest="build/env/${build}"
 
-            echo "Adding to docker-compose.override.yml" >&2
-            definition="\n# --- Generated entry: ${build}\n${build}:\n  build: ${dest}\n  dns:\n    - \"\${${use}}\"\n\n"
-            echo -e "${definition}" >> docker-compose.override.yml
+
+
+                echo "Creating environment at ${dest}" >&2
+                mkdir -p ${dest}
+                cp -r tests ${dest}
+                cp -r "env/test/${env}/"* ${dest}
+
+                echo "Adding to docker-compose.override.yml" >&2
+                definition="\n# --- Generated entry: ${build}\n${build}:\n  build: ${dest}\n  dns:\n    - \"\${${dns_use}}\"\n\n"
+                echo -e "${definition}" >> docker-compose.override.yml
+            done
         done
     done
 }

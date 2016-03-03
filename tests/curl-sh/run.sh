@@ -1,3 +1,3 @@
 #!/bin/bash
 
-time curl http://example.com --connect-timeout 3 --max-time 5
+time curl http://some.nonexistent.hostname.example --connect-timeout 3 --max-time 5

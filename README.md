@@ -1,48 +1,54 @@
 # DNS Connect Timeout Testing
 
-`connect.php` uses curl to make a connection to example.com. To test the handling of connection timeouts caused by DNS timing out, you can:
+Some PHP HTTP clients show some weird definitions of a 'connect timeout'.
+This repository contains a bunch of test cases and docker containers.
+
+They're all wired up to the bash script `./test`. You run it, and
+the results appear in `build/out`.
+
+## Test process
+
+The first thing the test script does is build a bunch of testing environments
+in `build/env`. These are added to `docker-compose.override.yml`. Next, a few 
+common services are started up: a good DNS server, and a bad one that times out. 
+Finally, each test in the `tests` directory is run against each test environment.
+
+The environments tested are combinations of:
+
+* `good-dns` or `bad-dns`, where a bad environment is configured with a DNS
+    server that never responds.
+* `good-hostname` or `bad-hostname`, where a bad environment is configured with
+    a name that doesn't resolve.
+* `trusty-php5.5`, `trusty-php5.6`, `trusty-php7.0`, Ubuntu distro and PHP version.
+    
+So, that's 2 x 2 x 3 = 12 environments for each test. So far... :)
+
+### Included Tests
+
+* `curl-sh` is a test using the command line cURL distributed with Ubuntu Trusty
+* `curl-php` is a test using PHP's cURL extension (in simple `curl_exec` mode)
+* `guzzle` is a test using Guzzle 6 with its default (multi-cURL) handler
+
+### Criteria
+
+A *pass* is simply when the `time` command shows the wallclock time as 3 seconds or less (it often doesn't.)
+Even though we always specify a connect timeout of 3 seconds, we observe run times
+of 20 seconds or more!
+
+### Dependencies
+
+You'll need:
+
+* Docker
+* Docker compose
+* Composer (we do the initial install of things like Guzzle outside of any container)
+
+## Notes
+
+To test the handling of connection timeouts caused by DNS timing out yourself, you can:
 
 * Disable any DNS servers running on your test machine
 * Set 127.0.0.1 as the resolver (`echo "nameserver 127.0.0.1" | sudo tee /etc/resolv.conf`)
 * Run a listener on UDP port 53
-  * Don't use `nc`/netcat for this, because of http://stackoverflow.com/questions/7696862/strange-behavoiur-of-netcat-with-udp#answer-7696956
-  * Socat works: `sudo socat UDP-RECV:53 STDOUT`
-* Execute the php: `time php connect.php`
-
-## Criteria
-
-A *pass* is when the `time` command shows the wallclock time as around 3 seconds. (Hint: it often doesn't.)
-
-## Example
-
-```
-$ lsb_release -dcr
-Description:	Ubuntu 14.04.3 LTS
-Release:	14.04
-Codename:	trusty
-
-$ dpkg -l | grep php5-curl
-ii  php5-curl                            5.5.30+dfsg-1+deb.sury.org~trusty+1              amd64        CURL module for php5
-
-$ time php connect.php
-
-Fatal error: Uncaught exception 'GuzzleHttp\Exception\ConnectException' with message 'cURL error 28: Resolving timed out after 3000 milliseconds (see http://curl.haxx.se/libcurl/c/libcurl-errors.html)' in .../vendor/guzzlehttp/guzzle/src/Handler/CurlFactory.php on line 186
-
-GuzzleHttp\Exception\ConnectException: cURL error 28: Resolving timed out after 3000 milliseconds (see http://curl.haxx.se/libcurl/c/libcurl-errors.html) in .../vendor/guzzlehttp/guzzle/src/Handler/CurlFactory.php on line 186
-
-Call Stack:
-    0.0002     224232   1. {main}() .../connect.php:0
-    0.0169    1114736   2. GuzzleHttp\Client->get() .../connect.php:12
-    0.0170    1115256   3. GuzzleHttp\Client->__call() .../connect.php:12
-    0.0170    1115328   4. GuzzleHttp\Client->request() .../vendor/guzzlehttp/guzzle/src/Client.php:87
-    0.0265    1553760   5. GuzzleHttp\Promise\Promise->wait() .../vendor/guzzlehttp/guzzle/src/Client.php:129
-
-
-real	0m20.122s [!!!!!!!!!!!!]
-user	0m0.836s
-sys	0m0.065s
-```
-
-## Docker
-
-The setup uses docker-compose and requires 1.5.0 or higher.
+    * Don't use `nc`/netcat for this, because of http://stackoverflow.com/questions/7696862/strange-behavoiur-of-netcat-with-udp#answer-7696956
+    * Socat works, and is what we use in the docker environments for this repo: `sudo socat UDP-RECV:53 STDOUT`
