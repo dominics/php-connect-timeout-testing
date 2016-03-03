@@ -1,5 +1,19 @@
 #!/bin/bash -e
 
-for test in $(ls -1 build/out); do
-    echo "Test file ${test}"
+cd "$(dirname "$0")"
+source scripts/_common.sh
+
+if [ ! -d build/out ]; then
+    echo "build/out does not exist. Try running ./test first" >&2
+    exit 2
+fi
+
+echo -e "hostname\tdns\tenv\ttest\twallclocktime"
+
+tests=$(find build/out -type f -name \*.out | sort)
+
+for test in $tests; do
+    echo -n $(basename $test) | sed 's/_/\t/g' | sed 's/\.out$//'
+    echo -ne \\t
+    cat $test | sed -n '/^real\t.*$/p' | cut -f 2
 done

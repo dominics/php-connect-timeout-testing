@@ -8,6 +8,16 @@ the results appear in `build/out`.
 
 ## Test process
 
+### Dependencies
+
+You'll need:
+
+* Docker
+* Docker compose
+* Composer (we do the initial install of things like Guzzle outside of any container)
+
+### Overview
+
 The first thing the test script does is build a bunch of testing environments
 in `build/env`. These are added to `docker-compose.override.yml`. Next, a few 
 common services are started up: a good DNS server, and a bad one that times out. 
@@ -35,13 +45,11 @@ A *pass* is simply when the `time` command shows the wallclock time as 3 seconds
 Even though we always specify a connect timeout of 3 seconds, we observe run times
 of 20 seconds or more!
 
-### Dependencies
+### Summarizing 
 
-You'll need:
-
-* Docker
-* Docker compose
-* Composer (we do the initial install of things like Guzzle outside of any container)
+The `./summarize` script will summarize various `.out` files in the `build/out`
+directory. Run it after running `./test` to get the output in a format for convenient
+further analysis.
 
 ## Notes
 
